@@ -2,8 +2,7 @@
 
 An end-to-end analytics project: clean a messy public-health dataset, model it, and deliver a 2-page Power BI dashboard that tells leadership **where lung cancer burden is highest and whether clinical trial access keeps pace with it**.
 
-![Page 1 - Cancer Burden](images/page1_cancer_burden.png)
-![Page 2 - Trial Access](images/page2_trial_access.png)
+<img src="Images\Cancer Burden.png" width="500" title="Page 1 - Cancer Burden"> <img src="Images\Trial Access vs Burden.png" width="500" title="Page 2 - Trial Access">
 
 ---
 
@@ -20,14 +19,14 @@ The dashboard is designed for managers and executives: three KPIs per page, one 
 
 | Area | Tools |
 |---|---|
-| Data cleaning & profiling | Python (pandas), Power Query |
+| Data cleaning & profiling | Power Query |
 | Data modeling | Power BI (galaxy schema / star schemas sharing dimensions) |
 | Calculations | DAX (KPIs, MoM / YoY, ranking, tooltips) |
-| Visualization | Power BI Desktop (Shape Map, Decomposition Tree, Scatter, Donut, Table) |
+| Visualization | Power BI (Shape Map, Decomposition Tree, Scatter, Donut, Table) |
 
 ## 3. Dataset
 
-Source file: `Lung_cancer_dataset.xlsx` (synthetic / educational data, per the dataset's own source note).
+Source file: `Lung_cancer_dataset.xlsx`
 
 | Sheet | Grain | Rows | Description |
 |---|---|---|---|
@@ -55,16 +54,13 @@ Integrity checks that passed: complete 51 × 36 state-month grid, no duplicate s
 ## 5. Data Model
 
 ```
-Dim_Date  ──┬── Fact_Cancer   (State × Month)
-            └── Fact_Trial    (Trial × State × Snapshot month)
+Dim_Date  ──┬── Fact_Cancer   
+            └── Fact_Trial  
 Dim_State ──┬── Fact_Cancer
             └── Fact_Trial
 Dim_Trial ──── Fact_Trial
 ```
-
-- `Dim_State` (from `State_Mapping`) is the single source for state names, regions and map locations.
-- The two fact tables are **never joined directly**; they share only the date and state dimensions.
-- `Dim_Date` is a complete calendar marked as the date table.
+<img src="Images\Data Modelling.png" width="600" title="Page 1 - Cancer Burden">
 
 ## 6. KPI Definitions
 
@@ -129,28 +125,11 @@ Time comparisons: **MoM** vs the previous month, **YoY** vs the same period last
 ```
 ├── README.md
 ├── data/
-│   ├── raw/Lung_cancer_dataset.xlsx
-│   └── clean/                       # cleaned fact & dimension tables
-├── notebooks/                       # profiling & cleaning (Python)
-├── powerbi/
-│   └── Lung_Cancer_Dashboard.pbix
-├── dax/
-│   └── Lung_Cancer_Dashboard_DAX.dax
-├── docs/
-│   └── Client_Problem_Statement.pptx
-└── images/
-    ├── page1_cancer_burden.png
-    └── page2_trial_access.png
+│   ├── Lung_cancer_dataset.xlsx
+├── Dashboard/
+│   └── Dashboard.pbix
+└── Images/
+    ├── Cancer_burden.png
+    └── Trial_access.png
+    └── Data Modelling.png
 ```
-
-## 12. How to Reproduce
-
-1. Open `Lung_Cancer_Dashboard.pbix` in Power BI Desktop (or load the cleaned tables from `data/clean/`).
-2. Build the relationships described in section 5 and mark `Dim_Date` as the date table.
-3. Create an empty `_Measures` table, then load `dax/Lung_Cancer_Dashboard_DAX.dax` through DAX query view (*Update model with changes*).
-4. Set the Year / Month slicers to the latest month for the headline view.
-
-## 13. Author
-
-**[Your Name]** · Data Analyst (Marketing · Sales · Banking)
-[LinkedIn](https://www.linkedin.com/in/your-profile) · [Email](mailto:your.email@example.com)
